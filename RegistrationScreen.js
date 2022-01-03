@@ -349,6 +349,7 @@ const ProfileFunction = ({ route, navigation }) => {
               uri: profilepic,
             }}
           />
+          <Text>testttt</Text>
         </View>
         <Table
           borderStyle={{
