@@ -11,6 +11,7 @@ import {
   Alert,
   TextInput,
   AppRegistry,
+  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
 import { NavigationContainer } from "@react-navigation/native";
@@ -174,6 +175,86 @@ const ProfileFunction = ({ route, navigation }) => {
     jabatan,
   } = route.params;
 
+  const [thead, setThead] = useState(["Type", "Details"]);
+  const [tbody, setTbody] = useState([
+    ["Name", nama],
+    // ["Gambar", gambar],
+    ["IC", nokp],
+    ["Staff ID", stafid],
+    ["Position", jawatan],
+    ["Department", jabatan],
+    ["Email", email],
+  ]);
+
+  const profilepic =
+    "https://staff.ucyp.edu.my/STAFF_UCYP/e_resource/gambar_staf/" + gambar;
+
+  const [isAttendance, setIsAttendance] = useState(false);
+
+  useEffect(() => {
+    const authattendance = async () => {
+      setIsAttendance(false);
+      // alert(route.params.id);
+      navigation.navigate("Attendance", { id: route.params.id });
+    };
+    if (isAttendance) authattendance();
+  }, [isAttendance]);
+
+  return (
+    <SafeAreaView style={styles.container2}>
+      <ScrollView>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <Image
+            style={styles.profilepic}
+            source={{
+              uri: profilepic,
+            }}
+          />
+        </View>
+        <Table
+          borderStyle={{
+            padding: 10,
+            borderWidth: 2,
+            borderColor: "#fff",
+            borderRadius: 10,
+          }}
+        >
+          <Row data={thead} style={styles.thead} textStyle={styles.ttext} />
+          <Rows data={tbody} textStyle={styles.ttext} />
+        </Table>
+
+        <View>
+          <TouchableOpacity
+            style={styles.btncss}
+            onPress={() => setIsAttendance(true)}
+          >
+            <Text>E-Finger</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.btncss}
+            onPress={() => setIsAttendance(true)}
+          >
+            <Text>E-Leave</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+const AttendanceFunction = ({ route, navigation }) => {
+  const { id } = route.params;
+
+  const [dt, setDt] = useState(new Date().toLocaleString());
+
+  useEffect(() => {
+    let secTimer = setInterval(() => {
+      setDt(new Date().toLocaleString());
+    }, 1000);
+
+    return () => clearInterval(secTimer);
+  }, []);
+
   //Hook
   const [checkclockin, setCheckclockin] = useState(true);
   const [butangTitle, setButangTitle] = useState("...checking");
@@ -271,6 +352,7 @@ const ProfileFunction = ({ route, navigation }) => {
         )
         .then((response) => {
           setIsisClockedin(false);
+          checkClockList(true);
           //navigate users based on the response
           if (response.data.statusCode == 1) {
             alert("You have succesfully CLOCKED OUT");
@@ -291,16 +373,6 @@ const ProfileFunction = ({ route, navigation }) => {
     if (isClockedin) authenticate2();
   }, [isClockedin]);
 
-  const [dt, setDt] = useState(new Date().toLocaleString());
-
-  useEffect(() => {
-    let secTimer = setInterval(() => {
-      setDt(new Date().toLocaleString());
-    }, 1000);
-
-    return () => clearInterval(secTimer);
-  }, []);
-
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -315,79 +387,85 @@ const ProfileFunction = ({ route, navigation }) => {
     return () => clearTimeout(timer);
   }, [count]);
 
+  //retrieve clock in data for
+
   const [thead, setThead] = useState(["Type", "Details"]);
   const [tbody, setTbody] = useState([
-    ["Name", nama],
-    // ["Gambar", gambar],
-    ["IC", nokp],
-    ["Staff ID", stafid],
-    ["Position", jawatan],
-    ["Department", jabatan],
-    ["Email", email],
+    ["Clock In", ""],
+    ["Clock Out", ""],
   ]);
 
-  const profilepic =
-    "https://staff.ucyp.edu.my/STAFF_UCYP/e_resource/gambar_staf/" + gambar;
-
-  const [isAttendance, setIsAttendance] = useState(false);
+  const [isList, checkClockList] = useState(true);
 
   useEffect(() => {
-    const authattendance = async () => {
-      setIsAttendance(false);
-      navigation.navigate("Attendance");
+    const attendancelist = async () => {
+      checkClockList(false);
+      axios
+        .post(
+          "https://smarthelpersystem.ucyp.edu.my/mobileapp/public/api/clockinlist",
+          {
+            id: route.params.id,
+          }
+        )
+        .then((response) => {
+          checkClockList(false);
+          //navigate users based on the response
+          if (response.data.result == 200) {
+            alert(
+              response.data.result +
+                " " +
+                response.data.id +
+                " " +
+                response.data.clockin +
+                " " +
+                response.data.clockout
+            );
+            setThead(["Today's Attendance"]);
+            setTbody([
+              ["Clock In", response.data.clockin],
+              ["Clock Out", response.data.clockout],
+            ]);
+          } else {
+            alert(response.data.result + " " + response.data.id);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     };
-    if (isAttendance) authattendance();
-  }, [isAttendance]);
+    if (isList) attendancelist();
+  }, [isList]);
+
+      
+
 
   return (
-    <SafeAreaView style={styles.container2}>
-      <ScrollView>
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <Image
-            style={styles.profilepic}
-            source={{
-              uri: profilepic,
-            }}
-          />
-        </View>
-        <Table
-          borderStyle={{
-            padding: 10,
-            borderWidth: 2,
-            borderColor: "#c8e1ff",
-            borderRadius: 10,
-          }}
-        >
-          <Row data={thead} style={styles.thead} textStyle={styles.ttext} />
-          <Rows data={tbody} textStyle={styles.ttext} />
-        </Table>
-        <View>
-          <Text style={styles.colorr}>{dt}</Text>
-        </View>
-        <View>
-          <Button title="Attendance" onPress={() => setIsAttendance(true)} />
-        </View>
-        <View style={{ margin: 10, width: "35%", fontSize: 50 }}>
-          <Button
-            disabled={disableButton}
-            style={styles.buttonStyle}
-            title={butangTitle}
-            onPress={() => setIsisClockedin(true)}
-          />
-          {/* <Button title="Show My Location"
+    <View>
+      <Table
+        borderStyle={{
+          padding: 10,
+          borderWidth: 2,
+          borderColor: "#fff",
+          borderRadius: 10,
+        }}
+      >
+        <Row data={thead} style={styles.thead} textStyle={styles.ttext} />
+        <Rows data={tbody} textStyle={styles.ttext} />
+      </Table>
+      <Text style={styles.colorr}>{dt}</Text>
+      {/* <Text>Hihisadasd {id}</Text> */}
+      <View style={{ margin: 10, width: "100%", fontSize: 50 }}>
+        <Button
+          disabled={disableButton}
+          style={styles.buttonStyle}
+          title={butangTitle}
+          onPress={() => setIsisClockedin(true)}
+        />
+        {/* <Button title="Show My Location"
         color="red" 
         onPress={GetCurrentLocation}
          /> */}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
-const AttendanceFunction = ({ route, navigation }) => {
-  return (
-    <View>
-      <Text>Hihi</Text>
+      </View>
     </View>
   );
 };
@@ -405,6 +483,18 @@ const styles = StyleSheet.create({
   container2: {
     flex: 1,
     backgroundColor: "#000",
+  },
+  btncss: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    backgroundColor: "green",
+    height: 50,
+    width: "100%",
+    flex: 1,
+    shadowColor: "white",
+    marginBottom: 2,
+    marginTop: 2,
   },
   logo: {
     height: 104,
