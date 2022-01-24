@@ -222,19 +222,13 @@ const ProfileFunction = ({ route, navigation }) => {
           <Row data={thead} style={styles.thead} textStyle={styles.ttext} />
           <Rows data={tbody} textStyle={styles.ttext} />
         </Table>
-
+          <View style={{height: 25}}></View>
         <View>
           <TouchableOpacity
             style={styles.btncss}
             onPress={() => setIsAttendance(true)}
           >
             <Text>E-Finger</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btncss}
-            onPress={() => setIsAttendance(true)}
-          >
-            <Text>E-Leave</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -317,10 +311,10 @@ const AttendanceFunction = ({ route, navigation }) => {
   useEffect(() => {
     const authenticate2 = async () => {
       setDisableButton(true);
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      let { status } = await Location.requestBackgroundPermissionsAsync();
 
       if (status !== "granted") {
-        Alert.alert(
+        alert(
           "Permission not granted...",
           "Allow the app to use location service.",
           [{ text: "OK" }],
@@ -411,22 +405,22 @@ const AttendanceFunction = ({ route, navigation }) => {
           checkClockList(false);
           //navigate users based on the response
           if (response.data.result == 200) {
-            alert(
-              response.data.result +
-                " " +
-                response.data.id +
-                " " +
-                response.data.clockin +
-                " " +
-                response.data.clockout
-            );
+            // alert(
+            //   response.data.result +
+            //     " " +
+            //     response.data.id +
+            //     " " +
+            //     response.data.clockin +
+            //     " " +
+            //     response.data.clockout
+            // );
             setThead(["Today's Attendance"]);
             setTbody([
               ["Clock In", response.data.clockin],
               ["Clock Out", response.data.clockout],
             ]);
           } else {
-            alert(response.data.result + " " + response.data.id);
+            //alert(response.data.result + " " + response.data.id);
           }
         })
         .catch((err) => {
@@ -440,7 +434,8 @@ const AttendanceFunction = ({ route, navigation }) => {
 
 
   return (
-    <View>
+    <View style={styles.container2}>
+      <View style={{height: 30}}></View>
       <Table
         borderStyle={{
           padding: 10,
@@ -452,8 +447,9 @@ const AttendanceFunction = ({ route, navigation }) => {
         <Row data={thead} style={styles.thead} textStyle={styles.ttext} />
         <Rows data={tbody} textStyle={styles.ttext} />
       </Table>
+      <View style={{height: 30}}></View>
       <Text style={styles.colorr}>{dt}</Text>
-      {/* <Text>Hihisadasd {id}</Text> */}
+      <View style={{height: 30}}></View>
       <View style={{ margin: 10, width: "100%", fontSize: 50 }}>
         <Button
           disabled={disableButton}
@@ -472,8 +468,8 @@ const AttendanceFunction = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   tcontainer: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
-  thead: { height: 40, backgroundColor: "#000", color: "white" },
-  ttext: { margin: 6, color: "white" },
+  thead: { height: 40, backgroundColor: "#000", color: "#fff" },
+  ttext: { margin: 6, color: "#fff" },
   container: {
     flex: 1,
     backgroundColor: "#000",

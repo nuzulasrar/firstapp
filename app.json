@@ -18,13 +18,19 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow this app to use your location",
+        "NSLocationAlwaysUsageDescription": "Allow this app to use your location",
+        "NSLocationWhenInUseUsageDescription": "Allow this app to use your location"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.nuzulasrar.firstapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
