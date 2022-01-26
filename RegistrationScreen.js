@@ -311,14 +311,13 @@ const AttendanceFunction = ({ route, navigation }) => {
   useEffect(() => {
     const authenticate2 = async () => {
       setDisableButton(true);
-      let { status } = await Location.requestBackgroundPermissionsAsync();
+      let { status } = await Location.requestForegroundPermissionsAsync();
 
       if (status !== "granted") {
         alert(
-          "Permission not granted...",
-          "Allow the app to use location service.",
-          [{ text: "OK" }],
-          { cancelable: false }
+          "Permission not granted. Allow the app to use location service.",
+          // [{ text: "OK" }],
+          // { cancelable: false }
         );
       }
 
