@@ -222,7 +222,7 @@ const ProfileFunction = ({ route, navigation }) => {
           <Row data={thead} style={styles.thead} textStyle={styles.ttext} />
           <Rows data={tbody} textStyle={styles.ttext} />
         </Table>
-          <View style={{height: 25}}></View>
+        <View style={{ height: 25 }}></View>
         <View>
           <TouchableOpacity
             style={styles.btncss}
@@ -315,7 +315,7 @@ const AttendanceFunction = ({ route, navigation }) => {
 
       if (status !== "granted") {
         alert(
-          "Permission not granted. Allow the app to use location service.",
+          "Permission not granted. Allow the app to use location service."
           // [{ text: "OK" }],
           // { cancelable: false }
         );
@@ -337,11 +337,16 @@ const AttendanceFunction = ({ route, navigation }) => {
 
       axios
         .post(
-          "https://staff.ucyp.edu.my/STAFF_UCYP/login/staffattendance_reactnative.php",
-          JSON.stringify({
+          // "https://staff.ucyp.edu.my/STAFF_UCYP/login/staffattendance_reactnative.php",
+          // JSON.stringify({
+          //   id: route.params.id,
+          //   address: address,
+          // })
+          "https://smarthelpersystem.ucyp.edu.my/mobileapp/public/api/clockin",
+          {
             id: route.params.id,
             address: address,
-          })
+          }
         )
         .then((response) => {
           setIsisClockedin(false);
@@ -429,12 +434,9 @@ const AttendanceFunction = ({ route, navigation }) => {
     if (isList) attendancelist();
   }, [isList]);
 
-      
-
-
   return (
     <View style={styles.container2}>
-      <View style={{height: 30}}></View>
+      <View style={{ height: 30 }}></View>
       <Table
         borderStyle={{
           padding: 10,
@@ -446,9 +448,9 @@ const AttendanceFunction = ({ route, navigation }) => {
         <Row data={thead} style={styles.thead} textStyle={styles.ttext} />
         <Rows data={tbody} textStyle={styles.ttext} />
       </Table>
-      <View style={{height: 30}}></View>
+      <View style={{ height: 30 }}></View>
       <Text style={styles.colorr}>{dt}</Text>
-      <View style={{height: 30}}></View>
+      <View style={{ height: 30 }}></View>
       <View style={{ margin: 10, width: "100%", fontSize: 50 }}>
         <Button
           disabled={disableButton}
