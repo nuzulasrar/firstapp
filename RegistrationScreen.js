@@ -258,10 +258,14 @@ const AttendanceFunction = ({ route, navigation }) => {
     const authenticate3 = async () => {
       axios
         .post(
-          "https://staff.ucyp.edu.my/STAFF_UCYP/login/staffattendancecheck_reactnative.php",
-          JSON.stringify({
+          // "https://staff.ucyp.edu.my/STAFF_UCYP/login/staffattendancecheck_reactnative.php",
+          // JSON.stringify({
+          //   id: route.params.id,
+          // })
+          "https://smarthelpersystem.ucyp.edu.my/mobileapp/public/api/checkattendance",
+          {
             id: route.params.id,
-          })
+          }
         )
         .then((response) => {
           setCheckclockin(false);
@@ -284,15 +288,15 @@ const AttendanceFunction = ({ route, navigation }) => {
             //alert(response.data.idinfostaf);
 
             if (response.data.time < 17) {
-              setButangTitle("CLOCK OUT: \nONLY AFTER 5.00PM");
-              setDisableButton(true);
+              setButangTitle("CLOCK OUT: \nCHECK THE TIME BEFORE CLOCK OUT!");
+              // setDisableButton(true);
             }
             if (response.data.time >= 17) {
               setButangTitle("CLOCK OUT");
               setDisableButton(false);
             }
           } else if (response.data.statusCode == 2) {
-            setButangTitle("YOU HAVE CLOCKED IN AND OUT TODAY.");
+            setButangTitle("YOU HAVE CLOCKED IN AND OUT WITH THIS APP TODAY.");
             setDisableButton(true);
           } else if (response.data.statusCode == 3) {
             setButangTitle("CLOCK IN");
