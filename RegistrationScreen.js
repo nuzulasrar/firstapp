@@ -361,7 +361,7 @@ const AttendanceFunction = ({ route, navigation }) => {
             setCheckclockin(true);
           } else if (response.data.statusCode == 2) {
             alert(
-              "You have succesfully CLOCKED IN. Please CLOCK OUT after 5.00 PM"
+              "You have succesfully CLOCKED IN"
             );
             setCheckclockin(true);
           } else {
